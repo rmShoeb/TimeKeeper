@@ -1,0 +1,47 @@
+/* Item modal styles */
+
+/* Flatpickr custom styling */
+::ng-deep .flatpickr-modern .flatpickr-calendar {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: none;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-day.selected {
+  background: #0d6efd;
+  border-color: #0d6efd;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-day.selected:hover {
+  background: #0b5ed7;
+  border-color: #0b5ed7;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-day:hover {
+  background: #e9ecef;
+  border-color: #e9ecef;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-day.today {
+  border-color: #0d6efd;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-months {
+  background: #0d6efd;
+  border-radius: 8px 8px 0 0;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-current-month,
+::ng-deep .flatpickr-modern .flatpickr-prev-month,
+::ng-deep .flatpickr-modern .flatpickr-next-month {
+  color: white;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-weekday {
+  color: #6c757d;
+  font-weight: 600;
+}
+
+::ng-deep .flatpickr-modern .flatpickr-day.disabled {
+  color: #dee2e6;
+}
