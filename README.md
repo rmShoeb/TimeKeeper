@@ -66,4 +66,4 @@ The project follows a clean, modular architecture:
 
 ## License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.en.html).
