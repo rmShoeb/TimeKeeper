@@ -1,10 +1,8 @@
-"""CRUD operations for OTP model."""
-
 from datetime import datetime, timedelta
 from sqlmodel import Session, select
 from app.models import OTP
-from app.auth import generate_otp
-from app.config import settings
+from app.services.otpUtil import generate_otp
+from app.services.settings import settings
 
 
 def create_otp(session: Session, email: str) -> OTP:
@@ -27,7 +25,7 @@ def create_otp(session: Session, email: str) -> OTP:
 
     # Generate new OTP
     otp_code = generate_otp()
-    expires_at = datetime.utcnow() + timedelta(minutes=settings.OTP_VALIDITY_MINUTES)
+    expires_at = datetime.now() + timedelta(minutes=settings.OTP_VALIDITY_MINUTES) # type: ignore
 
     otp = OTP(
         email=email,
@@ -60,7 +58,7 @@ def verify_otp(session: Session, email: str, otp_code: str) -> bool:
         OTP.email == email,
         OTP.otp_code == otp_code,
         OTP.is_used == False,
-        OTP.expires_at > datetime.utcnow()
+        OTP.expires_at > datetime.now()
     )
     otp = session.exec(statement).first()
 
@@ -84,7 +82,7 @@ def cleanup_expired_otps(session: Session) -> int:
     Returns:
         Number of OTPs deleted
     """
-    statement = select(OTP).where(OTP.expires_at < datetime.utcnow())
+    statement = select(OTP).where(OTP.expires_at < datetime.now())
     expired_otps = session.exec(statement).all()
 
     count = len(expired_otps)

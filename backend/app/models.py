@@ -6,7 +6,7 @@ from sqlmodel import Field, SQLModel, Relationship
 
 
 class User(SQLModel, table=True):
-    __tablename__ = "User" # type: ignore
+    __tablename__ = "user" # type: ignore
 
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(unique=True, index=True, max_length=255)
@@ -19,7 +19,7 @@ class User(SQLModel, table=True):
 
 class Category(SQLModel, table=True):
     """Category model for tracking items."""
-    __tablename__ = "Category" # type: ignore
+    __tablename__ = "category" # type: ignore
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(max_length=100, index=True)
@@ -34,7 +34,7 @@ class Category(SQLModel, table=True):
 
 class TrackingItem(SQLModel, table=True):
     """Tracking item model for warranties, licenses, subscriptions, etc."""
-    __tablename__ = "TrackingItem" # type: ignore
+    __tablename__ = "tracking_item" # type: ignore
 
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id", index=True)
@@ -51,7 +51,7 @@ class TrackingItem(SQLModel, table=True):
 
 
 class OTP(SQLModel, table=True):
-    __tablename__ = "OTP" # type: ignore
+    __tablename__ = "otp" # type: ignore
 
     id: Optional[int] = Field(default=None, primary_key=True)
     email: str = Field(index=True, max_length=255)
@@ -62,7 +62,7 @@ class OTP(SQLModel, table=True):
 
 
 class SchedulerRun(SQLModel, table=True):
-    __tablename__ = "SchedulerRun" # type: ignore
+    __tablename__ = "scheduler_run" # type: ignore
 
     id: Optional[int] = Field(default=None, primary_key=True)
     job_name: str = Field(unique=True, index=True, max_length=100)
