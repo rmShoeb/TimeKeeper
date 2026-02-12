@@ -1,0 +1,49 @@
+@if (visible()) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Manage Categories</h5>
+                <button type="button" class="btn-close" (click)="onClose()"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>Predefined Categories</h6>
+                    @for (cat of predefinedCategories(); track cat.id) {
+                    <div class="badge bg-secondary me-1 mb-1">
+                        {{ cat.name }}
+                    </div>
+                    }
+                </div>
+                <hr>
+                <div class="mb-3">
+                    <h6>Your Custom Categories</h6>
+                    @if (customCategories().length === 0) {
+                    <div class="text-muted">No custom categories yet.</div>
+                    }
+                    @for (cat of customCategories(); track cat.id) {
+                    <span class="badge bg-primary me-1 mb-1 position-relative" style="padding-right: 24px;">
+                        {{ cat.name }}
+                        <button type="button" class="btn-close btn-close-white position-absolute"
+                            (click)="onDelete(cat.id)" aria-label="Delete"
+                            style="top: 50%; right: 4px; transform: translateY(-50%); font-size: 0.7em; padding: 0; width: 16px; height: 16px;">
+                        </button>
+                    </span>
+                    }
+                </div>
+                <hr>
+                <div>
+                    <h6>Add New Category</h6>
+                    <div class="input-group">
+                        <input type="text" class="form-control" [(ngModel)]="newCategoryName"
+                            placeholder="Category name">
+                        <button class="btn btn-primary" (click)="onCreate()" [disabled]="!newCategoryName()">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

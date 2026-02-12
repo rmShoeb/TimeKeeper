@@ -1,0 +1,87 @@
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4">TimeKeeper</h2>
+
+                    <!-- Error Messages -->
+                    @if (errorMessage()) {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ errorMessage() }}
+                        <button type="button" class="btn-close" (click)="errorMessage.set('')"
+                            aria-label="Close"></button>
+                    </div>
+                    }
+
+                    <!-- Success Messages -->
+                    @if (successMessage()) {
+                    <div class="alert alert-success" role="alert">
+                        {{ successMessage() }}
+                    </div>
+                    }
+
+                    <!-- Step 1: Request OTP -->
+                    @if (!otpRequested()) {
+                    <form (ngSubmit)="onRequestOtp()" #requestForm="ngForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address <span
+                                    class="text-danger">*</span></label>
+                            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email"
+                                required email placeholder="your@email.com" [disabled]="loading()">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100"
+                            [disabled]="!requestForm.valid || loading()">
+                            @if (!loading()) {
+                            <span>Request OTP</span>
+                            } @else {
+                            <span>
+                                <span class="spinner-border spinner-border-sm me-2" role="status"
+                                    aria-hidden="true"></span>
+                                Sending...
+                            </span>
+                            }
+                        </button>
+                    </form>
+                    }
+
+                    <!-- Step 2: Verify OTP -->
+                    @if (otpRequested()) {
+                    <form (ngSubmit)="onVerifyOtp()" #verifyForm="ngForm">
+                        <div class="mb-3">
+                            <label for="otp" class="form-label">Enter OTP Code <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="otp" name="otp" [(ngModel)]="otpCode" required
+                                maxlength="6" pattern="[0-9]{6}" placeholder="123456" [disabled]="loading()" autofocus>
+                            <small class="form-text text-muted">
+                                Enter the 6-digit code sent to your email
+                            </small>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 mb-2"
+                            [disabled]="!verifyForm.valid || loading()">
+                            @if (!loading()) {
+                            <span>Verify & Login</span>
+                            } @else {
+                            <span>
+                                <span class="spinner-border spinner-border-sm me-2" role="status"
+                                    aria-hidden="true"></span>
+                                Verifying...
+                            </span>
+                            }
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary w-100" (click)="resetForm()"
+                            [disabled]="loading()">
+                            Use Different Email
+                        </button>
+                    </form>
+                    }
+                </div>
+            </div>
+            @if (otpRequested()) {
+            <p class="text-center text-muted mt-3">
+                <small>OTP code expires in 2 minutes. Please check your email inbox and spam folder.</small>
+            </p>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+@if (visible()) {
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Delete Account</h5>
+                <button type="button" class="btn-close btn-close-white" (click)="onClose()"></button>
+            </div>
+            <div class="modal-body">
+                @if (!otpRequested()) {
+                <div>
+                    <div class="alert alert-warning">
+                        <strong>Warning!</strong> This will permanently delete your account and all tracking items.
+                    </div>
+                    <p>Are you sure you want to proceed?</p>
+                </div>
+                }
+                @if (otpRequested()) {
+                <div>
+                    <p>An OTP has been sent to your email. Please check your inbox.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Enter OTP</label>
+                        <input type="text" class="form-control" [(ngModel)]="otpCode" maxlength="6" pattern="[0-9]{6}">
+                    </div>
+                </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="onClose()">Cancel</button>
+                @if (!otpRequested()) {
+                <button type="button" class="btn btn-danger" (click)="onRequestOtp()">
+                    Request Delete OTP
+                </button>
+                }
+                @if (otpRequested()) {
+                <button type="button" class="btn btn-danger" (click)="onConfirmDelete()"
+                    [disabled]="otpCode().length !== 6">
+                    Confirm Delete
+                </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+}
