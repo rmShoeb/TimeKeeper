@@ -1,0 +1,85 @@
+<div class="card mb-4">
+  <div class="card-header text-white" [ngClass]="headerClass()">
+    <h5 class="mb-0">{{ title() }}</h5>
+  </div>
+  <div class="card-body">
+    @if (items().length === 0) {
+      <div class="text-center text-muted py-4">
+        @if (type() === 'upcoming') {
+          No upcoming events. Create your first reminder!
+        } @else {
+          No past events yet.
+        }
+      </div>
+    }
+    @if (items().length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items(); track item.id) {
+              <tr>
+                <td>{{ item.title }}</td>
+                <td>
+                  <span class="badge" [ngClass]="badgeClass()">
+                    {{ item.category?.name || 'N/A' }}
+                  </span>
+                </td>
+                <td>{{ item.reminder_date }}</td>
+                <td>{{ item.description || '-' }}</td>
+                <td>
+                  @if (type() === 'upcoming') {
+                    <button class="btn btn-sm btn-warning me-1" (click)="onEdit(item)">
+                      Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="onDelete(item.id)">
+                      Delete
+                    </button>
+                  } @else {
+                    <button class="btn btn-sm btn-primary" (click)="onRecreate(item)">
+                      Recreate
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+    @if (showPagination()) {
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <div>
+          <select class="form-select form-select-sm" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+            <option [value]="10">10 per page</option>
+            <option [value]="20">20 per page</option>
+            <option [value]="50">50 per page</option>
+          </select>
+        </div>
+        <nav>
+          <ul class="pagination pagination-sm mb-0">
+            <li class="page-item" [class.disabled]="currentPage() === 1">
+              <a class="page-link" (click)="onPageChange(currentPage() - 1)">Previous</a>
+            </li>
+            @for (p of getPageNumbers(); track p) {
+              <li class="page-item" [class.active]="p === currentPage()">
+                <a class="page-link" (click)="onPageChange(p)">{{ p }}</a>
+              </li>
+            }
+            <li class="page-item" [class.disabled]="currentPage() === totalPages()">
+              <a class="page-link" (click)="onPageChange(currentPage() + 1)">Next</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    }
+  </div>
+</div>

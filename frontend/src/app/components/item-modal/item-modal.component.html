@@ -1,0 +1,68 @@
+@if (visible()) {
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ getModalTitle() }}</h5>
+          <button type="button" class="btn-close" (click)="onCancel()"></button>
+        </div>
+        <div class="modal-body">
+          <form #itemForm="ngForm">
+            <div class="mb-3">
+              <label class="form-label">Title <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [(ngModel)]="formData().title"
+                name="title"
+                required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Category <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                [(ngModel)]="formData().category_id"
+                name="category_id"
+                required>
+                <option [value]="null">Select category</option>
+                @for (cat of categories(); track cat.id) {
+                  <option [value]="cat.id">{{ cat.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Reminder Date <span class="text-danger">*</span></label>
+              <input
+                #dateInput
+                type="text"
+                class="form-control"
+                [(ngModel)]="formData().reminder_date"
+                name="reminder_date"
+                placeholder="Select date"
+                required
+                readonly>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <textarea
+                class="form-control"
+                [(ngModel)]="formData().description"
+                name="description"
+                rows="3"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onSave()"
+            [disabled]="!itemForm.valid">
+            {{ getActionButtonText() }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

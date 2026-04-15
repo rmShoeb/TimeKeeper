@@ -1,0 +1,107 @@
+<nav class="navbar navbar-dark bg-primary">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1">TimeKeeper</span>
+    <div class="d-flex align-items-center gap-2">
+      <span class="text-white me-2">{{ currentUserEmail() }}</span>
+      <button class="btn btn-light btn-sm" (click)="logout()">
+        Logout
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- User Account Settings - Separate section below navbar -->
+<div class="container mt-3">
+  <div class="alert alert-light border d-flex justify-content-between align-items-center">
+    <div>
+      <strong>Account Settings</strong>
+      <small class="text-muted ms-2">Manage your TimeKeeper account</small>
+    </div>
+    <button class="btn btn-outline-danger btn-sm" (click)="showDeleteAccountModal.set(true)">
+      Delete Account
+    </button>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Your Tracking Items</h3>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary" (click)="showCategoryModal.set(true)">
+        Manage Categories
+      </button>
+      <button class="btn btn-primary" (click)="openCreateModal()">
+        + Create New Reminder
+      </button>
+    </div>
+  </div>
+
+  <!-- Upcoming Items Table Component -->
+  <app-items-table
+    [title]="'Upcoming Events'"
+    [items]="upcomingItems()"
+    [type]="'upcoming'"
+    [currentPage]="upcomingPage()"
+    [totalPages]="upcomingPages()"
+    [(pageSize)]="upcomingPageSize"
+    (edit)="openEditModal($event)"
+    (delete)="deleteItem($event)"
+    (pageChange)="loadUpcomingItems($event)"
+  />
+
+  <!-- Past Items Table Component -->
+  <app-items-table
+    [title]="'Past Events'"
+    [items]="pastItems()"
+    [type]="'past'"
+    [currentPage]="pastPage()"
+    [totalPages]="pastPages()"
+    [(pageSize)]="pastPageSize"
+    (recreate)="openRecreateModal($event)"
+    (pageChange)="loadPastItems($event)"
+  />
+</div>
+
+<!-- Item Modal Component -->
+<app-item-modal
+  [visible]="showItemModal()"
+  [mode]="itemModalMode()"
+  [categories]="categories()"
+  [formData]="itemFormData()"
+  (save)="saveItem($event)"
+  (cancel)="closeItemModal()"
+  (validationError)="showError('Validation Error', $event)"
+/>
+
+<!-- Category Modal Component -->
+<app-category-modal
+  [visible]="showCategoryModal()"
+  [predefinedCategories]="predefinedCategories()"
+  [customCategories]="customCategories()"
+  [(newCategoryName)]="newCategoryName"
+  (close)="showCategoryModal.set(false)"
+  (createCategory)="createCategory($event)"
+  (deleteCategory)="deleteCategory($event)"
+/>
+
+<!-- Delete Account Modal Component -->
+<app-delete-account-modal
+  [visible]="showDeleteAccountModal()"
+  [otpRequested]="deleteOtpRequested()"
+  [(otpCode)]="deleteOtpCode"
+  (close)="closeDeleteAccountModal()"
+  (requestOtp)="requestDeleteAccount()"
+  (confirmDelete)="confirmDeleteAccount($event)"
+/>
+
+<!-- Error Modal Component -->
+<app-error-modal />
+
+<!-- Confirmation Modal Component -->
+<app-confirm-modal
+  [visible]="showConfirmModal()"
+  [title]="confirmModalTitle()"
+  [message]="confirmModalMessage()"
+  (confirm)="confirmAction()"
+  (cancel)="closeConfirmModal()"
+/>
