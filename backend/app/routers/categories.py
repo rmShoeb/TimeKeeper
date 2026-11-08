@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
 from app.services.database import get_session
 from app.dependencies import get_current_user
-from app.schemas import CategoryCreate, CategoryUpdate, CategoryResponse
+from app.schemas import CategoryCreateOrUpdate, CategoryResponse
 from app.crud import category as category_crud
 from app.models import User
 
@@ -32,7 +32,7 @@ async def get_categories(
 
 @router.post("", response_model=CategoryResponse, status_code=status.HTTP_201_CREATED)
 async def create_category(
-    category_data: CategoryCreate,
+    category_data: CategoryCreateOrUpdate,
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)
 ):
@@ -53,7 +53,7 @@ async def create_category(
 @router.put("/{category_id}", response_model=CategoryResponse, status_code=status.HTTP_200_OK)
 async def update_category(
     category_id: int,
-    category_data: CategoryUpdate,
+    category_data: CategoryCreateOrUpdate,
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)
 ):

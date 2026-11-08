@@ -92,7 +92,7 @@ async def check_reminders_and_send_notifications() -> None:
 
         # Send notifications
         #! restructure it to send batch notification
-        notification_service = get_notification_service(settings.NOTIFICATION_MODE) # type: ignore
+        notification_service = get_notification_service()
         # notification_service.send_batch_reminders()
         for item in items_due_today:
             user_email = item.user.email if item.user else None

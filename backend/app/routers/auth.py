@@ -3,10 +3,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
 from app.services.database import get_session
-from app.dependencies import get_current_user
-from app.schemas import EmailRequest, OTPVerifyRequest, TokenResponse, UserResponse
-from app.crud import otp as otp_crud, user as user_crud
 from app.services.jwtUtil import create_access_token
+from app.notifications import get_notification_service
+from app.dependencies import get_current_user
+from app.schemas import EmailRequest, VerifyOtp, TokenResponse, UserResponse
+from app.crud import otp as otp_crud, user as user_crud
 from app.models import User
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -30,10 +31,8 @@ async def request_otp(
     """
     # Create OTP (this also deletes any existing OTPs for this email)
     otp = otp_crud.create_otp(session, request.email)
-
-    # TODO: Send OTP via notification service
-    # For now, print to console
-    print(f"[OTP] OTP for {request.email}: {otp.otp_code} (expires in 2 minutes)")
+    notification_service = get_notification_service()
+    notification_service.send_otp(request.email, otp.otp_code)
 
     return {
         "message": "OTP sent successfully",
@@ -43,7 +42,7 @@ async def request_otp(
 
 @router.post("/verify-otp", response_model=TokenResponse, status_code=status.HTTP_200_OK)
 async def verify_otp(
-    request: OTPVerifyRequest,
+    request: VerifyOtp,
     session: Session = Depends(get_session)
 ):
     """Verify OTP and return JWT token.

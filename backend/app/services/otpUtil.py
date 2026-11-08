@@ -1,4 +1,5 @@
 import secrets
+from app.services.settings import settings
 
 def generate_otp() -> str:
     """Generate cryptographically secure 6-digit OTP.

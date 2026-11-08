@@ -4,9 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
 from app.services.database import get_session
 from app.dependencies import get_current_user
-from app.schemas import DeleteAccountConfirm
+from app.schemas import VerifyOtp
 from app.crud import otp as otp_crud, user as user_crud, category as category_crud, tracking_item as tracking_item_crud
 from app.models import User
+from app.notifications import get_notification_service
 
 router = APIRouter(prefix="/user", tags=["User Account"])
 
@@ -27,10 +28,8 @@ async def request_account_deletion(
     """
     # Create OTP for account deletion confirmation
     otp = otp_crud.create_otp(session, current_user.email)
-
-    # TODO: Send OTP via notification service
-    # For now, print to console
-    print(f"[OTP] Account deletion OTP for {current_user.email}: {otp.otp_code} (expires in 2 minutes)")
+    notification_service = get_notification_service()
+    notification_service.send_otp(current_user.email, otp.otp_code)
 
     return {
         "message": "OTP sent successfully for account deletion confirmation",
@@ -40,7 +39,7 @@ async def request_account_deletion(
 
 @router.post("/confirm-delete", status_code=status.HTTP_200_OK)
 async def confirm_account_deletion(
-    confirmation: DeleteAccountConfirm,
+    confirmation: VerifyOtp,
     current_user: User = Depends(get_current_user),
     session: Session = Depends(get_session)
 ):

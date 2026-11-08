@@ -261,4 +261,4 @@ async def recreate_item(
             detail="Failed to recreate item"
         )
 
-    return TrackingItemResponse.from_orm(new_item)
+    return TrackingItemResponse.model_validate(new_item)

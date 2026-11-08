@@ -3,9 +3,10 @@
 from app.notifications.base import NotificationService
 from app.notifications.console import ConsoleNotificationService
 from app.notifications.email import EmailService
+from app.services.settings import settings
 
 
-def get_notification_service(mode: str = "console") -> NotificationService:
+def get_notification_service() -> NotificationService:
     """Factory function to get notification service based on mode.
 
     Args:
@@ -17,10 +18,10 @@ def get_notification_service(mode: str = "console") -> NotificationService:
     Raises:
         ValueError: If mode is not supported
     """
-    if mode == "console":
+    if settings.NOTIFICATION_MODE == "console":
         return ConsoleNotificationService()
     # Future implementations
-    elif mode == "email":
+    elif settings.NOTIFICATION_MODE == "email":
         return EmailService()
     else:
-        raise ValueError(f"Unsupported notification mode: {mode}")
+        raise ValueError(f"Unsupported notification mode: {settings.NOTIFICATION_MODE}")
